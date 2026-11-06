@@ -217,7 +217,8 @@ html.es-movil.pasa-hero [data-flota]{opacity:1;transform:none;pointer-events:aut
   var onMq = function () { var was = MOBILE; MOBILE = mq.matches; document.documentElement.classList.toggle('es-movil', MOBILE); if (was !== MOBILE) show(current === 'Movil' || current === 'Main' ? 'Main' : current); };
   if (mq.addEventListener) mq.addEventListener('change', onMq); else if (mq.addListener) mq.addListener(onMq);
   var onScroll = function () { var v = document.getElementById('movVid'); var past = false; if (v) { var r = v.parentNode.getBoundingClientRect(); past = r.bottom < window.innerHeight * 0.35; } document.documentElement.classList.toggle('pasa-hero', past); };
-  window.addEventListener('scroll', onScroll, { passive: true });
+  var autoMute = function () { var v = document.getElementById('heroVid') || document.getElementById('movVid'); if (!v || v.muted) return; var r = v.getBoundingClientRect(); var vis = Math.max(0, Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0)); if (vis < r.height * 0.2) { v.muted = true; if (comps[current]) comps[current].setState({ sound: false }); } };
+  window.addEventListener('scroll', function () { onScroll(); autoMute(); }, { passive: true });
   show('Main'); onScroll();
 })();
 
